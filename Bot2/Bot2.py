@@ -2,7 +2,7 @@ import sqlite3
 import telebot
 from telebot import types
 bot = telebot.TeleBot("5168422705:AAHVU0_vMsT0kGbmSP12b0Oul9_0nNBadMg") 
-conn = sqlite3.connect('EF/database2.db', check_same_thread= False)
+conn = sqlite3.connect('EF/database21.db', check_same_thread= False)
 cursor = conn.cursor()
 @bot.message_handler(content_types=['text'])
 
@@ -13,17 +13,42 @@ def start(message):
 
     if message.text == "/start":
         markup_inline = types.InlineKeyboardMarkup()
-        item_1 = types.InlineKeyboardButton(text = 'Жанры', callback_data = 'genre')
-        item_2 = types.InlineKeyboardButton(text = 'Искать фильмы по подборкам', callback_data = 'list_movie_by_same')
+        
+        item_3 = types.InlineKeyboardButton(text = 'Тип', callback_data=  'type')
        
-        markup_inline.add(item_1,item_2)
+        markup_inline.add(item_3)
 
         bot.send_message(message.chat.id, "Выберите", reply_markup = markup_inline)
+
+    elif message.text == "/group":
+          markup_inline_group = types.InlineKeyboardMarkup()
+          item_g1 = types.InlineKeyboardButton(text = 'Искать фильмы по подборкам', callback_data = 'list_movie_by_same')
+          markup_inline_group.add(item_g1)
+          bot.send_message(message.chat.id, "Выберите", reply_markup = markup_inline_group)
 
     elif message.text =="/help":
 
         bot.send_message(message.from_user.id, "/search - Поиск фильмов по названию; /start - Для начало поиск по жанрам ")
 
+
+
+
+
+    elif message.text == "Film":
+        cursor = conn.cursor()
+        name_all = cursor.execute("SELECT Name FROM Kino Where Type = 'Film'" )
+        list_name_same_type = cursor.fetchall()
+        bot.send_message(message.chat.id,"Нажмите на /search чтобы искать эти фильмы")
+        for list in list_name_same_type:
+            bot.send_message(message.from_user.id, list)
+
+    elif message.text == "Serial":
+        cursor = conn.cursor()
+        name_all = cursor.execute("SELECT Name FROM Kino Where Type = 'Serial'" )
+        list_name_same_type = cursor.fetchall()
+        bot.send_message(message.chat.id,"Нажмите на /search чтобы искать эти сериал")
+        for list in list_name_same_type:
+            bot.send_message(message.from_user.id, list)
 
     elif message.text == "/search":
 
@@ -80,6 +105,24 @@ def start(message):
         for list in list_name_same_genre:
             bot.send_message(message.from_user.id, list)
 
+    elif message.text == "Фантастика":
+         cursor = conn.cursor()
+         name_all = cursor.execute("SELECT Name From Kino WHERE Genre = 'Фантастика'" )
+         list_name_same_genre = cursor.fetchall()
+         bot.send_message(message.chat.id, "Нажмите на /search")
+         for list in list_name_same_genre:
+             bot.send_message(message.from_user.id, list)
+
+    elif message.text == "Мультфильм":
+         cursor = conn.cursor()
+         name_all = cursor.execute("SELECT Name From Kino WHERE Genre = 'Мультфильм'" )
+         list_name_same_genre = cursor.fetchall()
+         bot.send_message(message.chat.id, "Нажмите на /search")
+         for list in list_name_same_genre:
+             bot.send_message(message.from_user.id, list)
+    
+         
+
 
 def kino_name(message):
         
@@ -90,27 +133,36 @@ def kino_name(message):
          sql_description ="SELECT Description FROM Kino WHERE Name = '"+ (message.text.upper()) + "'"
          sql_raiting = "SELECT Raiting FROM Kino WHERE Name = '"+ (message.text.upper()) + "'"
          sql_trailer ="SELECT Trailer FROM Kino WHERE Name = '"+ (message.text.upper()) + "'"
+         sql_type = "SELECT Type FROM Kino WHERE Name = '"+ (message.text.upper()) + "'"
+         
+
+         
          data = cursor.execute(sql_url)
          data = cursor.fetchall()
 
          i = 0;  
          while i != 1:
              try:
+                 bot.send_message(message.from_user.id, cursor.execute(sql_type))
                  bot.send_message(message.from_user.id,  cursor.execute(sql_description))
                  bot.send_message(message.from_user.id,  cursor.execute(sql_trailer)) 
                  bot.send_message(message.chat.id, "Страна:")
                  bot.send_message(message.from_user.id,  cursor.execute(sql_country)) 
                  bot.send_message(message.chat.id, "Кинопоиск рейтинг:")
                  bot.send_message(message.from_user.id,  cursor.execute(sql_raiting))
+                 
+
                  bot.send_message(message.from_user.id,  cursor.execute(sql_url))  
                  i = 1;
              except :
                  bot.send_message(message.from_user.id, "В базе данных не найдена или же вы неправильно ввели, проверьте что лишные пробелы не поставил. Чтобы начать искать /search")
                  i = 1;
-                 
-                
+
+
 
 @bot.callback_query_handler( func = lambda call: True)
+
+
 
 
 
@@ -125,25 +177,58 @@ def answer(call):
         item_genre5 = types.InlineKeyboardButton(text = 'КОМЕДИЯ', callback_data = 'КОМЕДИЯ')
         item_genre6 = types.InlineKeyboardButton(text = 'ДРАМА' , callback_data =  'ДРАМА')
         item_genre7 = types.InlineKeyboardButton(text = 'КРИМИНАЛ', callback_data = 'КРИМИНАЛ')
-        item_back5 = types.InlineKeyboardButton(text = 'Вернутся назад', callback_data = 'start')
+        item_back5 = types.InlineKeyboardButton(text = 'Вернутся назад', callback_data = 'Film')
         markup_inline1.add(item_genre1,item_genre2,item_genre3,item_genre4,item_genre5,item_genre6,item_genre7,item_back5)
         bot.send_message(call.from_user.id, "Выберите по жанрам ", reply_markup = markup_inline1)
 
+
+    elif call.data == "genre2":
+         markup_inline_genre2 = types.InlineKeyboardMarkup()
+         item_sngere_1 = types.InlineKeyboardButton(text = 'Фантастика', callback_data = 'Фантастика')
+         item_sngere_2 = types.InlineKeyboardButton(text = 'Мультфильм', callback_data = 'Мультфильм')
+         item_sngere_3 = types.InlineKeyboardButton(text = 'Комедия', callback_data = 'Комедия')
+         item_sngere_4 = types.InlineKeyboardButton(text = 'Аниме', callback_data = 'Аниме')
+         item_back6 = types.InlineKeyboardButton(text = 'Вернутся назад', callback_data = 'type')
+         markup_inline_genre2.add(item_sngere_1,item_sngere_2,item_sngere_3,item_sngere_4,item_back6)
+         bot.send_message(call.from_user.id,"Выерите", reply_markup = markup_inline_genre2)
+   
     elif call.data == "start":
         markup_inline_start = types.InlineKeyboardMarkup()
-      
-        item_call_1 = types.InlineKeyboardButton(text = 'Жанры', callback_data = 'genre')
-        item_call_2 = types.InlineKeyboardButton(text = 'Искать фильмы по подборкам', callback_data = 'list_movie_by_same')
-        markup_inline_start.add(item_call_1,item_call_2)
+        item_call_3 = types.InlineKeyboardButton(text = 'Тип', callback_data = 'type')
+        
+        markup_inline_start.add(item_call_3)
 
-        bot.send_message(call.from_user.id, "Choose", reply_markup = markup_inline_start)
+        bot.send_message(call.from_user.id, "Выберите", reply_markup = markup_inline_start)
+
+    elif call.data == "type":
+        markup_inline_type = types.InlineKeyboardMarkup()
+        item_type1 = types.InlineKeyboardButton(text = 'Сериалы', callback_data = 'Serial')
+        item_type2 = types.InlineKeyboardButton(text = 'Фильмы', callback_data = 'Film')
+        markup_inline_type.add(item_type1,item_type2)
+        bot.send_message(call.from_user.id,"Выберите по типу ", reply_markup = markup_inline_type)
+
+    elif call.data == "Film":
+
+         markup_inlinefilm = types.InlineKeyboardMarkup()
+         item_f1 = types.InlineKeyboardButton(text = 'Жанры', callback_data = 'genre')
+         item_back6 = types.InlineKeyboardButton(text = 'Вернутся назад', callback_data = 'type')
+         item_g1 = types.InlineKeyboardButton(text = 'Искать фильмы по подборкам', callback_data = 'list_movie_by_same')
+         markup_inlinefilm.add(item_f1,item_g1,item_back6)
+         bot.send_message(call.from_user.id, "Все фильмы ", reply_markup = markup_inlinefilm)
+
+    elif call.data == "Serial":
+         markup_inlineserial = types.InlineKeyboardMarkup()
+         item_s1 = types.InlineKeyboardButton(text = 'Жанры', callback_data = 'genre2')
+         item_back6 = types.InlineKeyboardButton(text = 'Вернутся назад', callback_data = 'type')
+         markup_inlineserial.add(item_s1,item_back6)
+         bot.send_message(call.from_user.id, "Все Сериалы", reply_markup = markup_inlineserial)
 
     elif call.data == 'list_movie_by_same':
         markup_inline_same = types.InlineKeyboardMarkup()
         item_list_same1 = types.InlineKeyboardButton(text = 'Гарри Поттер', callback_data = 'Гарри Поттер')
         item_list_same2 = types.InlineKeyboardButton(text = 'Властелин колец', callback_data = 'Властелин колец')
         item_list_same3 = types.InlineKeyboardButton(text = 'Человек паук', callback_data = 'Человек паук')
-        item_back4 = types.InlineKeyboardButton(text = 'Вернутся назад', callback_data = 'start')
+        item_back4 = types.InlineKeyboardButton(text = 'Вернутся назад', callback_data = 'Film')
         markup_inline_same.add(item_list_same1,item_list_same2,item_list_same3,item_back4)
         bot.send_message(call.from_user.id, "Подборка фильмов", reply_markup = markup_inline_same)
 
@@ -191,7 +276,13 @@ def answer(call):
         item_back6 = types.InlineKeyboardButton(text = 'Вернутся назад', callback_data = 'genre')
         markup_inlinehorror.add(item_h1,item_back6)
         bot.send_message(call.from_user.id, "Все фильмы по жанру ужас", reply_markup = markup_inlinehorror)
-        
+
+   
+         
+  
+         
+
+
         
     
     elif call.data == 'ФАНТАСТИКА':
@@ -267,10 +358,39 @@ def answer(call):
         markup_inlinecriminal.add(item_cri1,item_back12)
         bot.send_message(call.from_user.id, "Все фильмы по жанру криминал", reply_markup = markup_inlinecriminal)
 
+    elif call.data == 'Фантастика':
+        markup_inlineFantastika = types.InlineKeyboardMarkup()
+        item_cri1 = types.InlineKeyboardButton(text = 'Game Of Thrones', callback_data = 'GOT')
+        item_back12 = types.InlineKeyboardButton(text = 'Вернутся назад', callback_data = 'genre2')
+        markup_inlineFantastika.add(item_cri1,item_back12)
+        bot.send_message(call.from_user.id, "Все Сериалы по жанру Фантастика", reply_markup = markup_inlineFantastika)
+
+    elif call.data == 'Мультфильм':
+        markup_inlinemult = types.InlineKeyboardMarkup()
+        item_m1 = types.InlineKeyboardButton(text = 'Rick and Morty', callback_data = 'Рик и Морти')
+        item_m2 = types.InlineKeyboardButton(text = 'Gravity Falls', callback_data = 'Гравити Фолз')
+        item_m3 = types.InlineKeyboardButton(text = 'Avatar: The Last Airbende', callback_data = 'Avatar')
+        item_back12 = types.InlineKeyboardButton(text = 'Вернутся назад', callback_data = 'genre2')
+        markup_inlinemult.add(item_m1,item_m2,item_m3,item_back12)
+        bot.send_message(call.from_user.id, "Все Сериалы по жанру Мульфильм", reply_markup =markup_inlinemult)
+
+
+    elif call.data == 'Комедия':
+         markup_inlinekomediya = types.InlineKeyboardMarkup()
+         item_k1 = types.InlineKeyboardButton(text = 'Friends', callback_data = 'Friends')
+         item_back12 = types.InlineKeyboardButton(text = 'Вернутся назад', callback_data = 'genre2')
+         markup_inlinekomediya.add(item_k1,item_back12)
+         bot.send_message(call.from_user.id, "Все Сериалы по жанру Комедия", reply_markup = markup_inlinekomediya)
+
+    elif call.data == 'Аниме':
+         markup_inlineanime = types.InlineKeyboardMarkup()
+         item_a1 = types.InlineKeyboardButton(text = 'Attack on Titan', callback_data = 'AOT')
+         item_back12 = types.InlineKeyboardButton(text = 'Вернутся назад', callback_data = 'genre2')
+         markup_inlineanime.add(item_a1,item_back12)
+         bot.send_message(call.from_user.id, "Все Сериалы по жанру Аниме", reply_markup =  markup_inlineanime)
 
 
 
-   
 
     else:
         cursor = conn.cursor()
@@ -279,6 +399,10 @@ def answer(call):
         sql_description = "SELECT Description FROM Kino WHERE Name = '" + call.data + "'"
         sql_raiting = "SELECT Raiting FROM Kino WHERE Name = '" + call.data + "'"
         sql_trailer = "SELECT Trailer FROM Kino WHERE Name = '" + call.data + "'"
+        sql_type = "SELECT Type FROM Kino WHERE Name = '"+ call.data + "'"
+        
+        
+
         data = cursor.execute(sql_url)
         data = cursor.fetchall()
 
@@ -287,13 +411,17 @@ def answer(call):
             try:
                 bot.send_message(call.from_user.id, cursor.execute(sql_description))  
                 bot.send_message(call.from_user.id, cursor.execute(sql_trailer))  
+                bot.send_message(call.from_user.id, cursor.execute(sql_type))
 
                 bot.send_message(call.from_user.id, "Страна:")
                 bot.send_message(call.from_user.id, cursor.execute(sql_country))  
                 bot.send_message(call.from_user.id, "Кинопоиск рейтинг:")
                 bot.send_message(call.from_user.id, cursor.execute(sql_raiting))  
+                
 
                 bot.send_message(call.from_user.id, cursor.execute(sql_url))  
+
+                
                 i = 1;
             except:
                 bot.send_message(call.from_user.id,
