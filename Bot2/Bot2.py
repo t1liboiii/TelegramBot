@@ -2,7 +2,7 @@ import sqlite3
 import telebot
 from telebot import types
 bot = telebot.TeleBot("5168422705:AAHVU0_vMsT0kGbmSP12b0Oul9_0nNBadMg") 
-conn = sqlite3.connect('EF/database21.db', check_same_thread= False)
+conn = sqlite3.connect('EF/database211.db', check_same_thread= False)
 cursor = conn.cursor()
 @bot.message_handler(content_types=['text'])
 
@@ -13,10 +13,9 @@ def start(message):
 
     if message.text == "/start":
         markup_inline = types.InlineKeyboardMarkup()
-        
-        item_3 = types.InlineKeyboardButton(text = 'Тип', callback_data=  'type')
-       
-        markup_inline.add(item_3)
+        item_1 = types.InlineKeyboardButton(text = 'Сериалы', callback_data = 'Сериал')
+        item_2 = types.InlineKeyboardButton(text = 'Фильмы', callback_data = 'Фильм')
+        markup_inline.add(item_1,item_2)
 
         bot.send_message(message.chat.id, "Выберите", reply_markup = markup_inline)
 
@@ -28,23 +27,23 @@ def start(message):
 
     elif message.text =="/help":
 
-        bot.send_message(message.from_user.id, "/search - Поиск фильмов по названию; /start - Для начало поиск по жанрам ")
+        bot.send_message(message.from_user.id, "/search - Поиск фильмов по названию; /start - Для начало выбора между фильмами и сериалами ")
 
 
 
 
 
-    elif message.text == "Film":
+    elif message.text == "Фильм":
         cursor = conn.cursor()
-        name_all = cursor.execute("SELECT Name FROM Kino Where Type = 'Film'" )
+        name_all = cursor.execute("SELECT Name FROM Kino Where Type = 'Фильм'" )
         list_name_same_type = cursor.fetchall()
         bot.send_message(message.chat.id,"Нажмите на /search чтобы искать эти фильмы")
         for list in list_name_same_type:
             bot.send_message(message.from_user.id, list)
 
-    elif message.text == "Serial":
+    elif message.text == "Сериал":
         cursor = conn.cursor()
-        name_all = cursor.execute("SELECT Name FROM Kino Where Type = 'Serial'" )
+        name_all = cursor.execute("SELECT Name FROM Kino Where Type = 'Сериал'" )
         list_name_same_type = cursor.fetchall()
         bot.send_message(message.chat.id,"Нажмите на /search чтобы искать эти сериал")
         for list in list_name_same_type:
@@ -177,7 +176,7 @@ def answer(call):
         item_genre5 = types.InlineKeyboardButton(text = 'КОМЕДИЯ', callback_data = 'КОМЕДИЯ')
         item_genre6 = types.InlineKeyboardButton(text = 'ДРАМА' , callback_data =  'ДРАМА')
         item_genre7 = types.InlineKeyboardButton(text = 'КРИМИНАЛ', callback_data = 'КРИМИНАЛ')
-        item_back5 = types.InlineKeyboardButton(text = 'Вернутся назад', callback_data = 'Film')
+        item_back5 = types.InlineKeyboardButton(text = 'Вернутся назад', callback_data = 'Фильм')
         markup_inline1.add(item_genre1,item_genre2,item_genre3,item_genre4,item_genre5,item_genre6,item_genre7,item_back5)
         bot.send_message(call.from_user.id, "Выберите по жанрам ", reply_markup = markup_inline1)
 
@@ -188,26 +187,30 @@ def answer(call):
          item_sngere_2 = types.InlineKeyboardButton(text = 'Мультфильм', callback_data = 'Мультфильм')
          item_sngere_3 = types.InlineKeyboardButton(text = 'Комедия', callback_data = 'Комедия')
          item_sngere_4 = types.InlineKeyboardButton(text = 'Аниме', callback_data = 'Аниме')
+         item_sngere_5 = types.InlineKeyboardButton(text = 'Драма', callback_data = 'Драма')
+         item_sngere_6 = types.InlineKeyboardButton(text = 'Криминал', callback_data = 'Криминал')
+         item_sngere_7 = types.InlineKeyboardButton(text ='Детектив', callback_data = 'Детектив')
+         item_sngere_8 = types.InlineKeyboardButton(text = 'Военный', callback_data = 'Военный')
          item_back6 = types.InlineKeyboardButton(text = 'Вернутся назад', callback_data = 'type')
-         markup_inline_genre2.add(item_sngere_1,item_sngere_2,item_sngere_3,item_sngere_4,item_back6)
+         markup_inline_genre2.add(item_sngere_1,item_sngere_2,item_sngere_3,item_sngere_4,item_sngere_5,item_sngere_6,item_sngere_7,item_sngere_8,item_back6)
          bot.send_message(call.from_user.id,"Выерите", reply_markup = markup_inline_genre2)
    
     elif call.data == "start":
         markup_inline_start = types.InlineKeyboardMarkup()
-        item_call_3 = types.InlineKeyboardButton(text = 'Тип', callback_data = 'type')
-        
-        markup_inline_start.add(item_call_3)
+        item_call_3 = types.InlineKeyboardButton(text = 'Сериалы', callback_data = 'Сериал')
+        item_call_4 = types.InlineKeyboardButton(text = 'Фильмы', callback_data = 'Фильм')
+        markup_inline_start.add(item_call_3,item_call_4)
 
         bot.send_message(call.from_user.id, "Выберите", reply_markup = markup_inline_start)
 
     elif call.data == "type":
         markup_inline_type = types.InlineKeyboardMarkup()
-        item_type1 = types.InlineKeyboardButton(text = 'Сериалы', callback_data = 'Serial')
-        item_type2 = types.InlineKeyboardButton(text = 'Фильмы', callback_data = 'Film')
+        item_type1 = types.InlineKeyboardButton(text = 'Сериалы', callback_data = 'Сериал')
+        item_type2 = types.InlineKeyboardButton(text = 'Фильмы', callback_data = 'Фильм')
         markup_inline_type.add(item_type1,item_type2)
         bot.send_message(call.from_user.id,"Выберите по типу ", reply_markup = markup_inline_type)
 
-    elif call.data == "Film":
+    elif call.data == "Фильм":
 
          markup_inlinefilm = types.InlineKeyboardMarkup()
          item_f1 = types.InlineKeyboardButton(text = 'Жанры', callback_data = 'genre')
@@ -216,7 +219,7 @@ def answer(call):
          markup_inlinefilm.add(item_f1,item_g1,item_back6)
          bot.send_message(call.from_user.id, "Все фильмы ", reply_markup = markup_inlinefilm)
 
-    elif call.data == "Serial":
+    elif call.data == "Сериал":
          markup_inlineserial = types.InlineKeyboardMarkup()
          item_s1 = types.InlineKeyboardButton(text = 'Жанры', callback_data = 'genre2')
          item_back6 = types.InlineKeyboardButton(text = 'Вернутся назад', callback_data = 'type')
@@ -228,7 +231,7 @@ def answer(call):
         item_list_same1 = types.InlineKeyboardButton(text = 'Гарри Поттер', callback_data = 'Гарри Поттер')
         item_list_same2 = types.InlineKeyboardButton(text = 'Властелин колец', callback_data = 'Властелин колец')
         item_list_same3 = types.InlineKeyboardButton(text = 'Человек паук', callback_data = 'Человек паук')
-        item_back4 = types.InlineKeyboardButton(text = 'Вернутся назад', callback_data = 'Film')
+        item_back4 = types.InlineKeyboardButton(text = 'Вернутся назад', callback_data = 'Фильм')
         markup_inline_same.add(item_list_same1,item_list_same2,item_list_same3,item_back4)
         bot.send_message(call.from_user.id, "Подборка фильмов", reply_markup = markup_inline_same)
 
@@ -370,27 +373,64 @@ def answer(call):
         item_m1 = types.InlineKeyboardButton(text = 'Rick and Morty', callback_data = 'Рик и Морти')
         item_m2 = types.InlineKeyboardButton(text = 'Gravity Falls', callback_data = 'Гравити Фолз')
         item_m3 = types.InlineKeyboardButton(text = 'Avatar: The Last Airbende', callback_data = 'Avatar')
+        item_m4 = types.InlineKeyboardButton(text = 'Аркейн', callback_data = 'Аркейн')
         item_back12 = types.InlineKeyboardButton(text = 'Вернутся назад', callback_data = 'genre2')
-        markup_inlinemult.add(item_m1,item_m2,item_m3,item_back12)
+        markup_inlinemult.add(item_m1,item_m2,item_m3,item_m4,item_back12)
         bot.send_message(call.from_user.id, "Все Сериалы по жанру Мульфильм", reply_markup =markup_inlinemult)
 
 
     elif call.data == 'Комедия':
          markup_inlinekomediya = types.InlineKeyboardMarkup()
          item_k1 = types.InlineKeyboardButton(text = 'Friends', callback_data = 'Friends')
+         item_k2 = types.InlineKeyboardButton(text ='Офис', callback_data = 'Офис')
+         item_k3 = types.InlineKeyboardButton(text = 'Теория Большого Взрыва', callback_data = 'BigBangT')
+         item_k4 = types.InlineKeyboardButton(text = 'Клиника', callback_data = 'Клиника')
+         item_k5 = types.InlineKeyboardButton(text = 'Как я встретил вашу маму', callback_data = 'HIMYM')
          item_back12 = types.InlineKeyboardButton(text = 'Вернутся назад', callback_data = 'genre2')
-         markup_inlinekomediya.add(item_k1,item_back12)
+         markup_inlinekomediya.add(item_k1,item_k2,item_k3,item_k4,item_k5,item_back12)
          bot.send_message(call.from_user.id, "Все Сериалы по жанру Комедия", reply_markup = markup_inlinekomediya)
 
     elif call.data == 'Аниме':
          markup_inlineanime = types.InlineKeyboardMarkup()
          item_a1 = types.InlineKeyboardButton(text = 'Attack on Titan', callback_data = 'AOT')
+         item_a2 = types.InlineKeyboardButton(text = 'Berserk', callback_data = 'Берсерк')
+         item_a3 = types.InlineKeyboardButton(text = 'Cowboy Bebop', callback_data = 'Cowboy Bebop')
          item_back12 = types.InlineKeyboardButton(text = 'Вернутся назад', callback_data = 'genre2')
-         markup_inlineanime.add(item_a1,item_back12)
+         markup_inlineanime.add(item_a1,item_a2,item_a3,item_back12)
          bot.send_message(call.from_user.id, "Все Сериалы по жанру Аниме", reply_markup =  markup_inlineanime)
+    
+    
+    elif call.data == 'Драма':
+         markup_inlineDrama = types.InlineKeyboardMarkup()
+         item_d1 = types.InlineKeyboardButton(text = 'Сопрано', callback_data = 'Сопрано')
+         item_d2 = types.InlineKeyboardButton(text = 'Доктор Хаус', callback_data = 'Доктор Хаус')
+         item_d3 = types.InlineKeyboardButton(text = 'Бестыжие', callback_data = 'Бестыжие')
+         item_d4 = types.InlineKeyboardButton(text = 'Гордость и предубеждение', callback_data = 'PaP')
+         item_back12 = types.InlineKeyboardButton(text = 'Вернутся назад', callback_data = 'genre2')
+         markup_inlineDrama.add(item_d1,item_d2,item_d3,item_d4,item_back12)
+         bot.send_message(call.from_user.id, "Все Сериалы по жанру Драма", reply_markup =  markup_inlineDrama)
+         
+    elif call.data == 'Криминал':
+         markup_inlineKrim = types.InlineKeyboardMarkup()
+         item_kr1 = types.InlineKeyboardButton(text = 'Во все тяжкие', callback_data ='Во все тяжкие')
+         item_kr2 = types.InlineKeyboardButton(text = 'Место встречи изменить нельзя', callback_data = 'МВИН')
+         item_back12 = types.InlineKeyboardButton(text = 'Вернутся назад', callback_data = 'genre2')
+         markup_inlineKrim.add(item_kr1,item_kr2,item_back12)
+         bot.send_message(call.from_user.id, "Все Сериалы по жанру Криминал", reply_markup = markup_inlineKrim)
+         
+    elif call.data == 'Детектив':
+         markup_inlineDetektiv = types.InlineKeyboardMarkup()
+         item_de1 = types.InlineKeyboardButton(text='Шерлок', callback_data = 'Шерлок')
+         item_back12 = types.InlineKeyboardButton(text = 'Вернутся назад', callback_data = 'genre2')
+         markup_inlineDetektiv.add(item_de1,item_back12)
+         bot.send_message(call.from_user.id, "Все Сериалы по жанру Детектив", reply_markup = markup_inlineDetektiv)
 
-
-
+    elif call.data == 'Военный':
+         markup_inlineWar = types.InlineKeyboardMarkup()
+         item_w1 = types.InlineKeyboardButton(text='17 Мгновений весны', callback_data = '17spring')
+         item_back12 = types.InlineKeyboardButton(text = 'Вернутся назад', callback_data = 'genre2')
+         markup_inlineWar.add(item_w1,item_back12)
+         bot.send_message(call.from_user.id, "Все Сериалы по жанру Детектив", reply_markup = markup_inlineWar)
 
     else:
         cursor = conn.cursor()

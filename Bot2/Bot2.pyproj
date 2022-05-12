@@ -27,7 +27,7 @@
     <Folder Include="EF\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="EF\database21.db" />
+    <Content Include="EF\database211.db" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
