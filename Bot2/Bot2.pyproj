@@ -22,17 +22,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Bot2.py" />
-    <Compile Include="Procfile">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="EF\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="EF\database211.db" />
+    <Content Include="Procfile" />
     <Content Include="requirements.txt" />
-    <Content Include="runtime.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
