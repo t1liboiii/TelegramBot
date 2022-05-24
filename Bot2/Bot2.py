@@ -119,6 +119,45 @@ def start(message):
          bot.send_message(message.chat.id, "Нажмите на /search")
          for list in list_name_same_genre:
              bot.send_message(message.from_user.id, list)
+       
+      elif message.text == "Аниме":
+         cursor = conn.cursor()
+         name_all = cursor.execute("SELECT Name From Kino WHERE Genre = 'Аниме'" )
+         list_name_same_genre = cursor.fetchall()
+         bot.send_message(message.chat.id, "Нажмите на /search")
+         for list in list_name_same_genre:
+             bot.send_message(message.from_user.id, list)
+    elif message.text == "Комедия":
+         cursor = conn.cursor()
+         name_all = cursor.execute("SELECT Name From Kino WHERE Genre = 'Комедия'" )
+         list_name_same_genre = cursor.fetchall()
+         bot.send_message(message.chat.id, "Нажмите на /search")
+         for list in list_name_same_genre:
+             bot.send_message(message.from_user.id, list)
+    elif message.text == "Драма":
+         cursor = conn.cursor()
+         name_all = cursor.execute("SELECT Name From Kino WHERE Genre = 'Драма'" )
+         list_name_same_genre = cursor.fetchall()
+         bot.send_message(message.chat.id, "Нажмите на /search")
+         for list in list_name_same_genre:
+             bot.send_message(message.from_user.id, list)
+
+    elif message.text == "Криминал":
+         cursor = conn.cursor()
+         name_all = cursor.execute("SELECT Name From Kino WHERE Genre = 'Аниме'" )
+         list_name_same_genre = cursor.fetchall()
+         bot.send_message(message.chat.id, "Нажмите на /search")
+         for list in list_name_same_genre:
+             bot.send_message(message.from_user.id, list)
+
+
+    elif message.text == "Детектив":
+         cursor = conn.cursor()
+         name_all = cursor.execute("SELECT Name From Kino WHERE Genre = 'Детектив'" )
+         list_name_same_genre = cursor.fetchall()
+         bot.send_message(message.chat.id, "Нажмите на /search")
+         for list in list_name_same_genre:
+             bot.send_message(message.from_user.id, list)
     
          
 
